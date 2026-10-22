@@ -14,8 +14,6 @@ catch { ({ chromium } = require('/opt/node-tools/node_modules/playwright')); }
     path: output,
     format: 'A4',
     printBackground: true,
-    outline: true,
-    tagged: true,
     displayHeaderFooter: true,
     margin: { top: '17mm', bottom: '16mm', left: '13mm', right: '13mm' },
     headerTemplate: `<div style="width:100%;font-family:'Liberation Sans',Arial,sans-serif;font-size:7.5px;color:#666;padding:0 13mm;display:flex;justify-content:space-between;">

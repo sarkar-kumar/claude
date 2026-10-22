@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 import pyphen
-from pypdf import PdfReader
+from pypdf import PdfReader, PdfWriter
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT.parent / "src"
@@ -29,6 +29,7 @@ SHY = "­"
 WORD_RE = re.compile(r"[A-Za-z]{9,}")
 TAG_SPLIT = re.compile(r"(<[^>]+>)")
 TITLE_RE = re.compile(r"^# (.+?) \{#ch(\d\d)\}", re.M)
+SECTION_RE = re.compile(r"^## (\d+\.\d+) (.+)$", re.M)
 
 PARTS = {
     "01": ("Part A", "Grammar", "Chapters 01 – 44",
@@ -120,6 +121,43 @@ def find_chapter_pages(pdf_path: Path) -> dict:
     return found
 
 
+def sections(files):
+    out = []
+    for f in files:
+        out += SECTION_RE.findall(f.read_text(encoding="utf-8"))
+    return out
+
+
+def add_outline(pdf_path: Path, chs, entries, pages):
+    """Add Part / Chapter / Section bookmarks to the finished PDF."""
+    reader = PdfReader(str(pdf_path))
+    texts = [re.sub(r"\s+", " ", (pg.extract_text() or "").replace(SHY, "")) for pg in reader.pages]
+    writer = PdfWriter(clone_from=reader)
+    writer.add_outline_item("Contents", 1)
+    starts = [pages[n] for n, _ in entries if n in pages] + [len(texts) + 1]
+    part_item = None
+    for i, ((num, files), (_, title)) in enumerate(zip(chs, entries)):
+        if num not in pages:
+            continue
+        first = pages[num] - 1
+        if num in PARTS:
+            part, name, _, _ = PARTS[num]
+            part_item = writer.add_outline_item(f"{part} · {name}", first - 1)
+        ch_item = writer.add_outline_item(f"{num} {title}", first, parent=part_item)
+        last = starts[i + 1] - 1
+        cursor = first
+        for secno, sectitle in sections(files):
+            probe = f"{secno} {re.sub(r'[*_`]', '', sectitle)}"[:28]
+            for pg in range(cursor, last):
+                if probe in texts[pg]:
+                    writer.add_outline_item(f"{secno} {re.sub(r'[*_`]', '', sectitle)}", pg, parent=ch_item)
+                    cursor = pg
+                    break
+    writer.page_mode = "/UseOutlines"
+    with open(pdf_path, "wb") as fh:
+        writer.write(fh)
+
+
 def main():
     OUT_DIR.mkdir(exist_ok=True)
     out_pdf = Path(sys.argv[1]) if len(sys.argv) > 1 else OUT_DIR / "English_for_Competitive_Exams.pdf"
@@ -148,6 +186,7 @@ def main():
     render(page({}), html_path, out_pdf)
     pages = find_chapter_pages(out_pdf)
     render(page(pages), html_path, out_pdf)
+    add_outline(out_pdf, chs, entries, pages)
     missing = [n for n, _ in entries if n not in pages]
     if missing:
         print("warning: no page found for chapters", missing)
