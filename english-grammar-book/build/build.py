@@ -24,9 +24,9 @@ ROOT = Path(__file__).resolve().parent
 SRC = ROOT.parent / "src"
 OUT_DIR = ROOT.parent / "output"
 
-HYPH = pyphen.Pyphen(lang="en_GB")
+HYPH = pyphen.Pyphen(lang="en_GB", left=3, right=3)
 SHY = "­"
-WORD_RE = re.compile(r"[A-Za-z]{7,}")
+WORD_RE = re.compile(r"[A-Za-z]{9,}")
 TAG_SPLIT = re.compile(r"(<[^>]+>)")
 TITLE_RE = re.compile(r"^# (.+?) \{#ch(\d\d)\}", re.M)
 
