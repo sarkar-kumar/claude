@@ -1,0 +1,150 @@
+/* Print stylesheet: A4, two justified columns. Page margins are set in render.js. */
+:root {
+  --ink: #1b1b1f;
+  --navy: #14365c;
+  --teal: #0f6b6b;
+  --maroon: #7a2733;
+  --facts-bg: #eaf1f9;
+  --quote-bg: #fbf6ec;
+  --quote-bd: #b07d2b;
+  --note-bg: #f1f1f1;
+  --note-bd: #8a8a8a;
+}
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+  font-family: "Liberation Serif", "Times New Roman", "FreeSerif", serif;
+  font-size: 9.6pt;
+  line-height: 1.32;
+}
+p, li, dd { text-align: justify; hyphens: manual; }
+p { margin: 0 0 4.2pt; orphans: 2; widows: 2; }
+
+/* ---------- Two-column chapter body ---------- */
+.chapter-sec {
+  break-before: page;
+  column-count: 2;
+  column-gap: 7mm;
+  column-rule: 0.5pt solid #c9ced6;
+  column-fill: auto;
+}
+
+/* Chapter opener spans both columns */
+.chapter {
+  column-span: all;
+  position: relative;
+  margin: 0 0 9pt;
+  padding: 10pt 12pt 9pt;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 3pt;
+}
+.chapter p { margin: 0; text-align: left; }
+.chno {
+  font-family: "Liberation Sans", Arial, sans-serif;
+  font-size: 9pt; letter-spacing: 1.5pt; text-transform: uppercase; opacity: .85;
+}
+.chapter h1 {
+  font-family: "Liberation Sans", Arial, sans-serif;
+  font-size: 22pt; line-height: 1.1; margin: 2pt 0 3pt; font-weight: 700;
+}
+.chpart { font-family: "Liberation Sans", Arial, sans-serif; font-size: 8pt; opacity: .8; }
+
+h2, h3, h4 {
+  font-family: "Liberation Sans", Arial, sans-serif;
+  break-after: avoid; text-align: left;
+}
+h2 {
+  font-size: 11.5pt; color: var(--navy);
+  margin: 9pt 0 4pt; padding-bottom: 2pt;
+  border-bottom: 1.2pt solid var(--navy);
+}
+h3 { font-size: 10pt; color: var(--teal); margin: 7pt 0 3pt; }
+h4 { font-size: 9.6pt; color: var(--maroon); margin: 6pt 0 2pt; }
+h2 + h3 { margin-top: 3pt; }
+h3 + h4 { margin-top: 3pt; }
+
+ul, ol { margin: 0 0 4.5pt; padding-left: 13pt; }
+li { margin: 0 0 1.6pt; }
+li > p { margin-bottom: 1.6pt; }
+strong { font-weight: 700; }
+
+/* ---------- Writer profile ---------- */
+.facts {
+  margin: 3pt 0 7pt; padding: 5pt 7pt 4pt;
+  background: var(--facts-bg); border-left: 3pt solid var(--navy); border-radius: 2pt;
+  break-inside: avoid; font-size: 9.1pt; line-height: 1.34;
+}
+.facts p { text-align: left; margin: 0; }
+.facts strong { color: var(--navy); font-family: "Liberation Sans", Arial, sans-serif; font-size: 8.2pt; }
+
+/* ---------- Notes ---------- */
+.note {
+  margin: 5pt 0 6pt; padding: 5pt 7pt 4pt;
+  background: var(--note-bg); border-left: 3pt solid var(--note-bd); border-radius: 2pt;
+  break-inside: avoid;
+}
+.note p:last-child, .note ul:last-child { margin-bottom: 0; }
+
+/* ---------- Quotations ---------- */
+.quotes {
+  margin: 5pt 0 7pt; padding: 5pt 7pt 3pt;
+  background: var(--quote-bg); border-left: 3pt solid var(--quote-bd); border-radius: 2pt;
+}
+.quotes .qh {
+  display: block; text-align: left;
+  font-family: "Liberation Sans", Arial, sans-serif; font-weight: 700; font-size: 8.4pt;
+  color: var(--quote-bd); letter-spacing: .6pt; text-transform: uppercase; margin-bottom: 1pt;
+}
+.quotes ul { list-style: none; padding-left: 0; margin: 0; }
+.quotes li { margin: 0 0 4.5pt; break-inside: avoid; text-align: left; }
+.quotes li em { color: #2a2a2e; }
+.quotes .mean { display: block; color: #3a3a3f; font-size: 9pt; text-align: justify; margin-top: 1pt; }
+.quotes .src {
+  display: block; text-align: right; font-size: 8.3pt; color: var(--teal);
+  font-family: "Liberation Sans", Arial, sans-serif; margin-top: 0.5pt;
+}
+.quotes .src em { color: var(--teal); }
+
+/* ---------- Tables ---------- */
+.tbl { margin: 4pt 0 7pt; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
+table { width: 100%; border-collapse: collapse; font-size: 8.2pt; line-height: 1.22; }
+th, td { border: 0.5pt solid #a9b3c1; padding: 2pt 3pt; text-align: left; vertical-align: top; }
+th { background: var(--navy); color: #fff; font-family: "Liberation Sans", Arial, sans-serif; font-weight: 700; }
+tbody tr:nth-child(even) td { background: #f4f6f9; }
+
+/* ---------- Invisible page marker used to number the contents ---------- */
+.pmark { position: absolute; left: 2pt; top: 2pt; font-size: 1px; line-height: 1px; color: var(--navy); }
+
+/* ---------- Contents ---------- */
+.contents { break-before: page; }
+.toc-h {
+  font-family: "Liberation Sans", Arial, sans-serif; font-size: 22pt; color: var(--navy);
+  margin: 0 0 8pt; padding-bottom: 4pt; border-bottom: 1.5pt solid var(--navy);
+}
+.toc-list { column-count: 2; column-gap: 8mm; font-family: "Liberation Sans", Arial, sans-serif; font-size: 9.2pt; }
+.toc-part {
+  break-after: avoid; font-weight: 700; color: #fff; background: var(--teal);
+  padding: 2pt 5pt; margin: 6pt 0 3pt; border-radius: 2pt; font-size: 9pt;
+}
+.toc-row { display: flex; align-items: baseline; gap: 4pt; margin: 0 0 3.2pt; break-inside: avoid; }
+.toc-no { color: var(--navy); font-weight: 700; min-width: 14pt; }
+.toc-title { flex: 0 1 auto; }
+.toc-dots { flex: 1 1 auto; border-bottom: 0.8pt dotted #8a93a3; transform: translateY(-2pt); min-width: 8pt; }
+.toc-pg { font-weight: 700; color: var(--navy); min-width: 14pt; text-align: right; }
+
+/* ---------- Part divider pages ---------- */
+.part-page { break-before: page; height: 255mm; display: flex; align-items: center; }
+.part-inner { border-left: 6pt solid var(--teal); padding: 6mm 10mm; }
+.part-kicker { font-family: "Liberation Sans", Arial, sans-serif; letter-spacing: 3pt; text-transform: uppercase; color: var(--teal); font-size: 13pt; font-weight: 700; }
+.part-page h1 { font-family: "Liberation Sans", Arial, sans-serif; font-size: 36pt; color: var(--navy); margin: 4pt 0 6pt; line-height: 1.05; }
+.part-span { font-family: "Liberation Sans", Arial, sans-serif; font-size: 11pt; color: #444; margin-bottom: 10pt; }
+.part-page p { font-size: 12pt; max-width: 130mm; text-align: left; color: #333; }
+
+/* Keep a lead-in line with the list or table that follows it */
+p:has(+ ul), p:has(+ ol), p:has(+ .tbl) { break-after: avoid; }
